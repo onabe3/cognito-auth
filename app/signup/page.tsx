@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // ページ遷移用のルーターをインポート
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const router = useRouter(); // ページ遷移用のインスタンス
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
@@ -22,6 +24,9 @@ export default function SignupPage() {
       setMessage(`Error: ${data.error}`);
     } else {
       setMessage(data.message);
+      setTimeout(() => {
+        router.push("/verify"); // サインインページにリダイレクト
+      }, 2000);
     }
   }
 
@@ -73,7 +78,16 @@ export default function SignupPage() {
           Sign Up
         </button>
       </form>
-      {message && <p style={{ marginTop: "20px", color: "red" }}>{message}</p>}
+      {message && (
+        <p
+          style={{
+            marginTop: "20px",
+            color: message.startsWith("Error") ? "red" : "green",
+          }}
+        >
+          {message}
+        </p>
+      )}
       <p style={{ marginTop: "10px" }}>
         Don&apos;t have an account?
         <a href="/signin" style={{ color: "#007BFF" }}>
